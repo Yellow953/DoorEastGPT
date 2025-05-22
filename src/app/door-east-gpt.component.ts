@@ -1,11 +1,18 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PropertyCardComponent } from './property-card/property-card.component';
+import { AgencyCardComponent } from './agency-card/agency-card.component';
 
 @Component({
   standalone: true,
   selector: 'app-door-east-gpt',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PropertyCardComponent,
+    AgencyCardComponent,
+  ],
   templateUrl: './door-east-gpt.component.html',
   styleUrls: ['./door-east-gpt.component.css'],
 })
