@@ -17,6 +17,9 @@
     width: 500px;
     margin-right: 1rem;
     background-color: white;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
   "
   #chatBox
 >
@@ -35,26 +38,28 @@
     />
     <h5 class="mt-3 fw-bold mb-1">Say Hello to DoorEastGPT</h5>
     <p class="small m-0">
-      Chat with Lebanon’s first AI-powered property assistant and browse homes
+      Chat with Lebanon's first AI-powered property assistant and browse homes
       stress-free!
     </p>
   </div>
 
-  <!-- Chat Body -->
+  <!-- Chat Body - Single scroll container -->
   <div
-    class="p-4"
-    style="height: 300px; overflow-y: auto; background-color: #f8f9fa"
+    class="flex-grow-1 p-4"
+    style="overflow-y: auto; background-color: #f8f9fa"
+    #chatBody
   >
+    <!-- Welcome message -->
     <div
       class="bg-primary bg-opacity-10 text-dark rounded-3 shadow-sm p-3 mb-3 small"
     >
-      👋 Hi, I’m <strong>DoorEastGPT</strong>, your dedicated AI-powered
+      👋 Hi, I'm <strong>DoorEastGPT</strong>, your dedicated AI-powered
       assistant to make property search easier in Lebanon! How can I help you
       today?
     </div>
 
     <!-- Suggestion Chips -->
-    <div class="d-flex flex-wrap gap-2">
+    <div class="d-flex flex-wrap gap-2 mb-3">
       <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
         Average rent in Beirut
       </button>
@@ -66,23 +71,30 @@
       </button>
     </div>
 
-    <div class="mt-3">
-      <h6 class="fw-bold mb-2">🏠 Property Listings</h6>
-      <div class="row">
-        <div class="col-md-6">
-          <property-card></property-card>
-        </div>
-        <div class="col-md-6">
-          <property-card></property-card>
+    <!-- Messages container -->
+    <div class="messages-container">
+      <div *ngFor="let msg of messages" class="mb-3 small">
+        <div
+          [ngClass]="{
+            'text-end': msg.role === 'user',
+            'text-start': msg.role === 'assistant'
+          }"
+        >
+          <div
+            class="d-inline-block p-2 rounded-3 shadow-sm"
+            [ngClass]="{
+              'bg-primary text-white': msg.role === 'user',
+              'bg-light text-dark': msg.role === 'assistant'
+            }"
+          >
+            {{ msg.content }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-4">
-      <h6 class="fw-bold mb-2">🏢 Real Estate Agencies</h6>
-      <div>
-        <agency-card></agency-card>
-        <agency-card></agency-card>
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="text-muted small">
+        <em>DoorEastGPT is typing...</em>
       </div>
     </div>
   </div>
@@ -99,6 +111,7 @@
       type="text"
       class="form-control form-control-sm me-2 rounded-pill px-3"
       placeholder="Ask me anything about Lebanese real estate..."
+      (keyup.enter)="sendMessage()"
     />
     <button
       class="btn btn-sm btn-primary rounded-pill px-3"

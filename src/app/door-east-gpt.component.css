@@ -1,0 +1,47 @@
+.chat-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+}
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #007bff #f8f9fa;
+}
+
+.chat-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 3px;
+}
+
+.messages-container {
+  min-height: min-content;
+}
+
+.suggestion-chip {
+  transition: all 0.2s ease;
+}
+
+.suggestion-chip:hover {
+  background-color: #007bff;
+  color: white !important;
+}
+
+.chat-input {
+  transition: all 0.2s ease;
+}
+
+.chat-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

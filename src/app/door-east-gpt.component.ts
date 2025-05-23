@@ -1,37 +1,91 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  ViewChild,
+  AfterViewChecked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PropertyCardComponent } from './property-card/property-card.component';
-import { AgencyCardComponent } from './agency-card/agency-card.component';
+import { ChatgptService } from './chatgpt.service';
 
 @Component({
   standalone: true,
   selector: 'app-door-east-gpt',
-  imports: [
-    CommonModule,
-    FormsModule,
-    PropertyCardComponent,
-    AgencyCardComponent,
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './door-east-gpt.component.html',
   styleUrls: ['./door-east-gpt.component.css'],
 })
-export class DoorEastGPTComponent {
+export class DoorEastGPTComponent implements AfterViewChecked {
   chatOpen = false;
   userInput = '';
+  messages: { role: 'user' | 'assistant'; content: string }[] = [];
+  loading = false;
 
-  @ViewChild('chatBox') chatBox!: ElementRef;
+  constructor(private chatService: ChatgptService) {}
+
+  @ViewChild('chatBody') private chatBody!: ElementRef;
+  @ViewChild('chatBox') private chatBox!: ElementRef;
 
   toggleChat() {
     this.chatOpen = !this.chatOpen;
+    if (this.chatOpen) {
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
   }
 
   clearChat() {
+    this.messages = [];
     this.userInput = '';
   }
 
   sendMessage() {
-    // Your send logic here
+    const text = this.userInput.trim();
+    if (!text) return;
+
+    this.messages.push({ role: 'user', content: text });
+    this.userInput = '';
+    this.loading = true;
+
+    this.chatService.sendMessage(text).subscribe({
+      next: (res) => {
+        const reply = res.choices[0].message.content;
+        this.messages.push({ role: 'assistant', content: reply });
+        this.loading = false;
+        this.scrollToBottom();
+      },
+      error: (err) => {
+        console.error('ChatGPT API error:', err);
+        this.messages.push({
+          role: 'assistant',
+          content: 'Sorry, something went wrong. Please try again.',
+        });
+        this.loading = false;
+        this.scrollToBottom();
+      },
+    });
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      if (this.chatBody) {
+        this.chatBody.nativeElement.scrollTop =
+          this.chatBody.nativeElement.scrollHeight;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    if (this.chatOpen) {
+      this.chatOpen = false;
+    }
   }
 
   @HostListener('document:click', ['$event'])
