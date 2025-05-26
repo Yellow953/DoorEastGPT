@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "chatbot": {
+    "DoorEastGPT": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/chatbot",
+            "outputPath": "dist/DoorEastGPT",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -55,10 +55,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "chatbot:build:production"
+              "buildTarget": "DoorEastGPT:build:production"
             },
             "development": {
-              "buildTarget": "chatbot:build:development"
+              "buildTarget": "DoorEastGPT:build:development"
             }
           },
           "defaultConfiguration": "development"
