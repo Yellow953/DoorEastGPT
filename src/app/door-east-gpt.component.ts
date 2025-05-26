@@ -4,6 +4,8 @@ import {
   HostListener,
   ViewChild,
   AfterViewChecked,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,11 +18,27 @@ import { ChatgptService } from './chatgpt.service';
   templateUrl: './door-east-gpt.component.html',
   styleUrls: ['./door-east-gpt.component.css'],
 })
-export class DoorEastGPTComponent implements AfterViewChecked {
+export class DoorEastGPTComponent
+  implements AfterViewChecked, OnInit, OnDestroy
+{
   chatOpen = false;
   userInput = '';
   messages: { role: 'user' | 'assistant'; content: string }[] = [];
   loading = false;
+  isMobile = false;
+
+  ngOnInit() {
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile.bind(this));
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.checkMobile.bind(this));
+  }
+
+  checkMobile() {
+    this.isMobile = window.innerWidth <= 576;
+  }
 
   constructor(private chatService: ChatgptService) {}
 
@@ -97,5 +115,13 @@ export class DoorEastGPTComponent implements AfterViewChecked {
     ) {
       this.chatOpen = false;
     }
+  }
+
+  @ViewChild('userInputBox') userInputBox!: ElementRef;
+  fillInput(text: string) {
+    this.userInput = text;
+    setTimeout(() => {
+      this.userInputBox.nativeElement.focus();
+    }, 0);
   }
 }

@@ -11,26 +11,39 @@
 <!-- Chat Modal (Y-center, X-right) -->
 <div
   *ngIf="chatOpen"
-  class="position-fixed top-50 end-0 translate-middle-y shadow-lg rounded-4 border"
-  style="
-    z-index: 1070;
-    width: 500px;
-    margin-right: 1rem;
-    background-color: white;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-  "
+  class="position-fixed top-50 translate-middle-y shadow-lg rounded-4 border"
+  [class.chat-modal-mobile]="isMobile"
+  [ngStyle]="{
+    width: isMobile ? '100vw' : '500px',
+    right: isMobile ? '0' : '1em',
+    left: isMobile ? '0' : 'auto',
+    margin: isMobile ? '0' : null,
+    top: isMobile ? '0' : '50%',
+    transform: isMobile ? 'none' : 'translateY(-50%)',
+    height: isMobile ? '100vh' : 'auto',
+    maxHeight: isMobile ? '100vh' : '80vh',
+    'z-index': 1080,
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column'
+  }"
   #chatBox
 >
   <!-- Header -->
   <div
-    class="text-center p-4 rounded-top-4"
+    class="text-center p-4 rounded-top-4 position-relative"
     style="
       background: linear-gradient(to right, #007bff, #3399ff);
       color: white;
     "
   >
+    <!-- Close button -->
+    <button
+      class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+      aria-label="Close"
+      (click)="toggleChat()"
+    ></button>
+
     <img
       src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png"
       alt="AI Icon"
@@ -45,7 +58,7 @@
 
   <!-- Chat Body - Single scroll container -->
   <div
-    class="flex-grow-1 p-4"
+    class="flex-grow-1 p-4 chat-body"
     style="overflow-y: auto; background-color: #f8f9fa"
     #chatBody
   >
@@ -60,14 +73,23 @@
 
     <!-- Suggestion Chips -->
     <div class="d-flex flex-wrap gap-2 mb-3">
-      <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
+      <button
+        class="btn btn-outline-primary btn-sm rounded-pill px-3"
+        (click)="fillInput('Average rent in Beirut')"
+      >
         Average rent in Beirut
       </button>
-      <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
-        Best areas to invest
+      <button
+        class="btn btn-outline-primary btn-sm rounded-pill px-3"
+        (click)="fillInput('Best Agencies in Lebanon')"
+      >
+        Best Agencies in Lebanon
       </button>
-      <button class="btn btn-outline-primary btn-sm rounded-pill px-3">
-        Agencies near me
+      <button
+        class="btn btn-outline-primary btn-sm rounded-pill px-3"
+        (click)="fillInput('I\'m looking for an apartment in Beirut')"
+      >
+        I'm looking for an apartment in Beirut
       </button>
     </div>
 
@@ -107,6 +129,7 @@
       Clear
     </button>
     <input
+      #userInputBox
       [(ngModel)]="userInput"
       type="text"
       class="form-control form-control-sm me-2 rounded-pill px-3"

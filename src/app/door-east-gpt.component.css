@@ -10,6 +10,7 @@
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: #007bff #f8f9fa;
+  min-height: 0;
 }
 
 .chat-body::-webkit-scrollbar {
@@ -44,4 +45,14 @@
 
 .chat-input:focus {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-close {
+  --bs-btn-close-opacity: 1;
+}
+
+@media (max-width: 576px) {
+  .chat-modal-mobile {
+    border-radius: 0 !important;
+  }
 }
